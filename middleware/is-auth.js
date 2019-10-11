@@ -6,11 +6,12 @@ module.exports = (req, res, next) => {
         req.isAuth = false
         return next()
     }
-    const token = authHeader.split('Bearer ')[1]
+    const token = authHeader.split(' ')[1]
     if (!token || token === '') {
         req.isAuth = false
         return next()
     }
+    let decodedToken
     try {
         decodedToken = jwt.verify(token, 'somesupersecretkey')
     } catch (err) {
@@ -22,6 +23,6 @@ module.exports = (req, res, next) => {
         return next()
     }
     req.isAuth = true
-    req.userId = decodedToken
+    req.userId = decodedToken.userId
     next()
 }
